@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "600697946565",
+    "firebase_url": "https://appidtracjer01.firebaseio.com",
+    "project_id": "appidtracjer01",
+    "storage_bucket": "appidtracjer01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600697946565:android:ab71cea489103c2f",
+        "android_client_info": {
+          "package_name": "alv.app.utpl.edu.ec.apptracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNQclDxITpnomFs0c_R-PeGzPwb2WxE4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600697946565:android:2f86811e9d392ebc",
+        "android_client_info": {
+          "package_name": "alv.app.utpl.edu.ec.mapa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNQclDxITpnomFs0c_R-PeGzPwb2WxE4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600697946565:android:1959f3be9c23069fcecbac",
+        "android_client_info": {
+          "package_name": "ec.edu.utpl.apptracker_f1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600697946565-ek6iedq3u9l72ju94icubuf4053ndq5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ec.edu.utpl.apptracker_f1",
+            "certificate_hash": "cade5d226e2116a4779649a3152327922970b5ff"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNQclDxITpnomFs0c_R-PeGzPwb2WxE4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600697946565:android:162f05e7815f30e0cecbac",
+        "android_client_info": {
+          "package_name": "ec.edu.utpl.tracker_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600697946565-77ovajqtfk585o1lc5le8kot1behjotk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ec.edu.utpl.tracker_1",
+            "certificate_hash": "cade5d226e2116a4779649a3152327922970b5ff"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNQclDxITpnomFs0c_R-PeGzPwb2WxE4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/inicioMenu">
+    <fragment
+        android:id="@+id/inicioMenu"
+        android:name="ec.edu.utpl.apptracker_f1.menuFragment.InicioMenu"
+        android:label="fragment_inicio_menu"
+        tools:layout="@layout/fragment_inicio_menu" >
+        <action
+            android:id="@+id/action_inicioMenu_to_codigoQR"
+            app:destination="@id/codigoQR" />
+        <action
+            android:id="@+id/action_inicioMenu_to_mapsActivity01"
+            app:destination="@id/mapsActivity01" />
+        <action
+            android:id="@+id/action_inicioMenu_to_excesos"
+            app:destination="@id/excesos" />
+        <action
+            android:id="@+id/action_inicioMenu_to_info2"
+            app:destination="@id/info2" />
+        <action
+            android:id="@+id/action_inicioMenu_to_reportarCond"
+            app:destination="@id/reportarCond" />
+    </fragment>
+    <fragment
+        android:id="@+id/codigoQR"
+        android:name="ec.edu.utpl.apptracker_f1.menuFragment.CodigoQR"
+        android:label="fragment_codigo_qr"
+        tools:layout="@layout/fragment_codigo_qr" />
+    <activity
+        android:id="@+id/mapsActivity01"
+        android:name="ec.edu.utpl.apptracker_f1.actividades.MapsActivity01"
+        android:label="activity_maps01"
+        tools:layout="@layout/activity_maps01" />
+    <fragment
+        android:id="@+id/excesos"
+        android:name="ec.edu.utpl.apptracker_f1.menuFragment.Excesos"
+        android:label="fragment_excesos"
+        tools:layout="@layout/fragment_excesos" />
+    <fragment
+        android:id="@+id/info2"
+        android:name="ec.edu.utpl.apptracker_f1.menuFragment.Info"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+    <fragment
+        android:id="@+id/reportarCond"
+        android:name="ec.edu.utpl.apptracker_f1.menuFragment.ReportarCond"
+        android:label="fragment_reportar_cond"
+        tools:layout="@layout/fragment_reportar_cond" />
+</navigation>
