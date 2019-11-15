@@ -39,6 +39,8 @@ import ec.edu.utpl.apptracker_f1.R;
 public class Excesos extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -48,8 +50,8 @@ public class Excesos extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     View view;
+    LinearLayout iContenedor;
     DatabaseReference ref;
-    LinearLayout lContenedor;
 
     public Excesos() {
         // Required empty public constructor
@@ -87,10 +89,9 @@ public class Excesos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_excesos, container, false);
+        iContenedor = view.findViewById(R.id.lcontenedor);
         ref = FirebaseDatabase.getInstance().getReference();
-        lContenedor = view.findViewById(R.id.lcontenedor);
-        listaFirebase(lContenedor);
-        FirebaseApp.initializeApp(getContext());
+        listaExcesos();
         return view;
     }
 
@@ -101,13 +102,14 @@ public class Excesos extends Fragment {
         }
     }
 
-    public void listaFirebase(final LinearLayout contenedor) {
+    public void listaExcesos() {
 
-        String myIMEI = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        ref.child(myIMEI).child("excesoVelocidad").addValueEventListener(new ValueEventListener() {
+        //String myIMEI = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        ref.child("12982c91d931b50").child("excesoVelocidad").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int contador =0;
+                System.out.println("exxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     try {
                         Reporte rCoord = snapshot.getValue(Reporte.class);
@@ -136,7 +138,7 @@ public class Excesos extends Fragment {
                         //implementar el evento
                         switchb.setOnClickListener(misEventosButton);
 
-                        contenedor.addView(switchb);
+                        iContenedor.addView(switchb);
 
                     }catch(DatabaseException e){
                         Log.e("error!!",""+dataSnapshot.getKey());

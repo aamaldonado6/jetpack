@@ -1,4 +1,4 @@
-package ec.edu.utpl.apptracker_f1.manejador;
+package ec.edu.utpl.apptracker_f1.manejadorUbicacion;
 
 public class MapsLatLang {
     private double latitud;

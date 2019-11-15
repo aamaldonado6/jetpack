@@ -1,11 +1,12 @@
 package ec.edu.utpl.apptracker_f1;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import ec.edu.utpl.apptracker_f1.interfaz.IcomunicacionMenu;
-import ec.edu.utpl.apptracker_f1.manejador.GpsUbicacion;
+import ec.edu.utpl.apptracker_f1.manejadorUbicacion.GpsUbicacion;
 import ec.edu.utpl.apptracker_f1.menuFragment.CodigoQR;
 import ec.edu.utpl.apptracker_f1.menuFragment.Excesos;
 import ec.edu.utpl.apptracker_f1.menuFragment.Info;
@@ -14,79 +15,56 @@ import ec.edu.utpl.apptracker_f1.menuFragment.ReportarCond;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity implements IcomunicacionMenu, ReportarCond.OnFragmentInteractionListener, Excesos.OnFragmentInteractionListener, Info.OnFragmentInteractionListener, InicioMenu.OnFragmentInteractionListener, CodigoQR.OnFragmentInteractionListener {
 
-    private DatabaseReference mDatabase;
-    public double latitudM,longitudM,velocidadM;
-    //definir los key para las variables a mostrar
-    public static final String key_lati="lati",key_long="long",key_veloc="velocidad";
-
-View view;
-
+    public TextView txtVelocidad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Bundle bundle = new Bundle();
-        bundle.putString("amount", "Sssss");
 
-        Navigation.findNavController(view).navigate(R.id.info2, bundle);
+        new IntentIntegrator(this).initiateScan();
 
 
 
-        //txtLati.setText("as");
+        //crear los TextView para la velocidad
+        txtVelocidad=findViewById(R.id.velocidad_actual);
+        Bundle datosAEnviar = new Bundle();
+        datosAEnviar.putInt("edad", 21);
+
         //pedirPermisos
         permisosUbicacion();
-
-        //inicializar Firebase
-        try {
-            FirebaseApp.initializeApp(this);
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        }
-        catch (Exception e) {
-        }
+        //solicitar lat,long
         gpsUb();
-
     }
-    public void gpsLoc(Location location) {
-        if (location.getLatitude() != 0.0 && location.getLongitude() != 0.0){
-            try {
-                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-                List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(),1);
-                if (!list.isEmpty()){
-                    Address address = list.get(0);
-                    //txtVelocidad.setText(address.getAddressLine(0));
-                    System.out.println("yyyyyyyyyy"+address.getAddressLine(0));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, "Cancelledasdasd", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Scaasdasdndned: " + result.getContents(), Toast.LENGTH_LONG).show();
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     public void gpsUb() {
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -126,12 +104,6 @@ View view;
         }
     }
 
-    private String gg = "";
-
-    Calendar calendario = new GregorianCalendar();
-    int hora,minuto,segundo,mes,dia,anio;
-
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -139,7 +111,7 @@ View view;
 
     @Override
     public void iniCodigoQr(View v) {
-        Navigation.findNavController(v).navigate(R.id.action_inicioMenu_to_codigoQR);
+        Navigation.findNavController(v).navigate(R.id.action_inicioMenu_to_codigoQR2);
     }
 
     @Override

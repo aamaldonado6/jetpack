@@ -1,6 +1,7 @@
 package ec.edu.utpl.apptracker_f1.menuFragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,7 +10,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
+import ec.edu.utpl.apptracker_f1.MainActivity;
 import ec.edu.utpl.apptracker_f1.R;
 
 /**
@@ -25,6 +31,11 @@ public class ReportarCond extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    public RadioButton radio11,radio12,radio13,radio14;
+    public Button button;
+    public EditText textView;
+    View view;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -66,8 +77,35 @@ public class ReportarCond extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        view=inflater.inflate(R.layout.fragment_reportar_cond, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reportar_cond, container, false);
+        //crear los componente
+        radio11 =view.findViewById(R.id.radio1);
+        radio12 =view.findViewById(R.id.radio2);
+        radio13 =view.findViewById(R.id.radio3);
+        radio14 =view.findViewById(R.id.radio4);
+        textView =view.findViewById(R.id.txt_tv);
+        button=view.findViewById(R.id.btn_rep);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                guardarD();
+            }
+        });
+
+        return view;
+    }
+
+    public void guardarD(){
+        String coment = String.valueOf(textView.getText());
+        String r1 = String.valueOf(radio11.isChecked());
+        String r2 = String.valueOf(radio12.isChecked());
+        String r3 = String.valueOf(radio13.isChecked());
+        String r4 = String.valueOf(radio14.isChecked());
+        Toast.makeText(getActivity().getApplicationContext(),"REPORTE GUARDADO", Toast.LENGTH_SHORT).show();
+        getFragmentManager().popBackStack();
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -109,3 +147,10 @@ public class ReportarCond extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+
+
+
+
+
+
+

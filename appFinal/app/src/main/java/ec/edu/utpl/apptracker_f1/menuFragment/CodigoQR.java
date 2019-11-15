@@ -1,16 +1,30 @@
 package ec.edu.utpl.apptracker_f1.menuFragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.Result;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import ec.edu.utpl.apptracker_f1.MainActivity;
 import ec.edu.utpl.apptracker_f1.R;
 import ec.edu.utpl.apptracker_f1.interfaz.IcomunicacionMenu;
 
@@ -33,10 +47,11 @@ public class CodigoQR extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    public Button btnQR;
 
     Activity activity;
     IcomunicacionMenu icomunicacionMenu;
-
+    View view;
     public CodigoQR() {
         // Required empty public constructor
     }
@@ -66,14 +81,50 @@ public class CodigoQR extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(getActivity().getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_codigo_qr, container, false);
+        view=inflater.inflate(R.layout.fragment_codigo_qr, container, false);
+        btnQR = view.findViewById(R.id.btn_qr);
+        btnQR.setOnClickListener(new View.OnClickListener() {
+            MainActivity mainActivity;
+            @Override
+            public void onClick(View v) {
+                escanearQr();
+            }
+
+        });
+        return view;
     }
+    public void escanearQr() {
+        IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(CodigoQR.this);
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.initiateScan();
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

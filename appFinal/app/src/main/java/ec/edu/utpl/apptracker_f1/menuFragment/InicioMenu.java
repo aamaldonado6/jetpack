@@ -3,7 +3,6 @@ package ec.edu.utpl.apptracker_f1.menuFragment;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.net.sip.SipSession;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,17 +13,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.navigation.Navigation;
 import ec.edu.utpl.apptracker_f1.R;
 import ec.edu.utpl.apptracker_f1.interfaz.IcomunicacionMenu;
-import ec.edu.utpl.apptracker_f1.manejador.GpsUbicacion;
 
-import static ec.edu.utpl.apptracker_f1.MainActivity.key_lati;
-import static ec.edu.utpl.apptracker_f1.MainActivity.key_long;
-import static ec.edu.utpl.apptracker_f1.MainActivity.key_veloc;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,28 +33,15 @@ public class InicioMenu extends Fragment {
     Activity activity;
     IcomunicacionMenu icomunicacionMenu;
     CardView cardQR,cardReportar,cardExcesos,cardInfo,cardMapa;
-    public double velocidad,longitud,latitud;
-    public TextView txtVelocidad,txtlongi,txtLati;
-
-
     public InicioMenu() {
         // Required empty public constructor
-    }
-
-
-    public double getVelocidad() {
-        return velocidad;
-    }
-
-    public void setVelocidad(double velocidad) {
-        this.velocidad = velocidad;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            velocidad= getArguments().getDouble("s",213.2);
+           // velocidad= getArguments().getDouble("s",213.2);
         }
     }
 
@@ -77,24 +55,13 @@ public class InicioMenu extends Fragment {
         cardReportar=view.findViewById(R.id.card_reporte);
         cardInfo=view.findViewById(R.id.card_info);
         cardExcesos=view.findViewById(R.id.card_excesos);
-        txtVelocidad=view.findViewById(R.id.velocidad_actual);
-        txtlongi= view.findViewById(R.id.txt_longitud);
-        txtLati= view.findViewById(R.id.txt_latitud);
         return view;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        System.out.println("xxxxxxxxxx"+velocidad);
-        //eventos interface
-        //textView.setText("asdasd");
-        txtLati.setText("s");
-        txtlongi.setText("s");
-        txtVelocidad.setText("ss"+getVelocidad());
         eventosMenu();
-        GpsUbicacion s = new GpsUbicacion();
     }
-
 
     private void eventosMenu(){
 
@@ -150,7 +117,6 @@ public class InicioMenu extends Fragment {
         }
     }
 
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -172,3 +138,5 @@ public class InicioMenu extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+
+

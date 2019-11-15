@@ -10,31 +10,36 @@
         android:label="fragment_inicio_menu"
         tools:layout="@layout/fragment_inicio_menu" >
         <action
-            android:id="@+id/action_inicioMenu_to_codigoQR"
-            app:destination="@id/codigoQR" />
-        <action
-            android:id="@+id/action_inicioMenu_to_mapsActivity01"
-            app:destination="@id/mapsActivity01" />
+            android:id="@+id/action_inicioMenu_to_reportarCond"
+            app:destination="@id/reportarCond"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_inicioMenu_to_excesos"
-            app:destination="@id/excesos" />
+            app:destination="@id/excesos"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_inicioMenu_to_mapsActivity01"
+            app:destination="@id/mapsActivity01"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_inicioMenu_to_info2"
-            app:destination="@id/info2" />
+            app:destination="@id/info2"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_inicioMenu_to_reportarCond"
-            app:destination="@id/reportarCond" />
+            android:id="@+id/action_inicioMenu_to_codigoQR2"
+            app:destination="@id/codigoQR"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/codigoQR"
         android:name="ec.edu.utpl.apptracker_f1.menuFragment.CodigoQR"
         android:label="fragment_codigo_qr"
         tools:layout="@layout/fragment_codigo_qr" />
-    <activity
-        android:id="@+id/mapsActivity01"
-        android:name="ec.edu.utpl.apptracker_f1.actividades.MapsActivity01"
-        android:label="activity_maps01"
-        tools:layout="@layout/activity_maps01" />
     <fragment
         android:id="@+id/excesos"
         android:name="ec.edu.utpl.apptracker_f1.menuFragment.Excesos"
@@ -50,4 +55,9 @@
         android:name="ec.edu.utpl.apptracker_f1.menuFragment.ReportarCond"
         android:label="fragment_reportar_cond"
         tools:layout="@layout/fragment_reportar_cond" />
+    <activity
+        android:id="@+id/mapsActivity01"
+        android:name="ec.edu.utpl.apptracker_f1.actividades.MapsActivity01"
+        android:label="activity_maps01"
+        tools:layout="@layout/activity_maps01" />
 </navigation>

@@ -1,11 +1,10 @@
 package ec.edu.utpl.apptracker_f1.actividades;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import ec.edu.utpl.apptracker_f1.R;
-import ec.edu.utpl.apptracker_f1.manejador.MapsLatLang;
+import ec.edu.utpl.apptracker_f1.manejadorUbicacion.MapsLatLang;
 
 import android.Manifest;
 import android.content.Context;
@@ -74,12 +73,8 @@ public class MapsActivity01 extends FragmentActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         miUbicacion();
-        datosFirebase(googleMap);
+        //datosFirebase(googleMap);
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     private void datosFirebase(GoogleMap googleMap) {
