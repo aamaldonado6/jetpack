@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,8 +44,8 @@ public class MapsActivity01 extends FragmentActivity implements OnMapReadyCallba
     private ArrayList<Marker> allMarcadores = new ArrayList<>();
     //copia del array para poderlo vaciar y que no se dupliquen los marcadores
     private ArrayList<Marker> marcadores = new ArrayList<>();
-    double lat = 0.0;
-    double lng = 0.0;
+    double lat = -4.0057456;
+    double lng = -79.2103267;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,8 @@ public class MapsActivity01 extends FragmentActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         miUbicacion();
-        //datosFirebase(googleMap);
+        datosFirebase(googleMap);
+
 
     }
 

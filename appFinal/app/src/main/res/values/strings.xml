@@ -8,7 +8,7 @@
     <string name="txt_mapa">Mapa</string>
     <string name="txt_qr">Código QR</string>
     <string name="txt_excesos">Excesos de velocidad</string>
-    <string name="txt_panico">Botón de pánico</string>
+    <string name="txt_panico">Alerta</string>
     <string name="log_login">logo de inicio de la app</string>
 
     <!-- TODO: Remove or change this placeholder text -->

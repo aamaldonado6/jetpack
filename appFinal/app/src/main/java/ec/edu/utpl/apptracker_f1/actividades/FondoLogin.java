@@ -9,12 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 
 public class FondoLogin extends AppCompatActivity {
-
+    //velocidad que se muestra en el menu inicial
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fondo_login);
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,7 +1,6 @@
 package ec.edu.utpl.apptracker_f1.menuFragment;
-
-import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,69 +16,37 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.zxing.Result;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import ec.edu.utpl.apptracker_f1.MainActivity;
 import ec.edu.utpl.apptracker_f1.R;
 import ec.edu.utpl.apptracker_f1.interfaz.IcomunicacionMenu;
+import ec.edu.utpl.apptracker_f1.manejadorBdd.GlobalClass;
+import ec.edu.utpl.apptracker_f1.manejadorBdd.ManejadorBdd;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CodigoQR.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CodigoQR#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CodigoQR extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    GlobalClass globalClass;
 
     private OnFragmentInteractionListener mListener;
     public Button btnQR;
-
+    TextView txtQr;
     Activity activity;
     IcomunicacionMenu icomunicacionMenu;
     View view;
-    public CodigoQR() {
-        // Required empty public constructor
-    }
+    String datosBundle;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CodigoQR.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CodigoQR newInstance(String param1, String param2) {
-        CodigoQR fragment = new CodigoQR();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            datosBundle =getArguments().getString("datosQr");
         }
-
     }
 
     @Override
@@ -90,12 +55,32 @@ public class CodigoQR extends Fragment {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(result != null) {
             if(result.getContents() == null) {
-                Toast.makeText(getActivity().getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Cancelado", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                String resultadoQR = result.getContents();
+                MainActivity.bundle.putString("datosQr",resultadoQR);
+                guardarDatos(resultadoQR);
+                Toast.makeText(getActivity().getApplicationContext(), "Datos Guardados", Toast.LENGTH_LONG).show();
+                //Navigation.findNavController(view).navigate(R.id.inicioMenu);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+
+
+    }
+
+    private void guardarDatos(String qr) {
+        //ordenar los datos capturados por el codigo QR
+        String[] parts = qr.split("=");
+        System.out.println(parts[0]);
+        if(parts[0].equals("apptrackerUTPL")){
+            globalClass = ((GlobalClass) getActivity().getApplicationContext());
+            globalClass.setNombreTransporte(parts[1]);
+            globalClass.setNumVehiculo(parts[3]);
+            globalClass.setTipoUs(parts[4]);
+            globalClass.setRuta(parts[2]);
+        txtQr.setText("Compañía:"+parts[1]+"\n\nRuta: "+parts[2]+"\n\nNúmero de vehículo: "+parts[3]);
         }
     }
 
@@ -105,16 +90,31 @@ public class CodigoQR extends Fragment {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_codigo_qr, container, false);
         btnQR = view.findViewById(R.id.btn_qr);
+        txtQr = view.findViewById(R.id.txt_qr);
+
+
+        if(datosBundle != null){
+            //ordenar los datos capturados por el codigo QR
+            String[] parts = datosBundle.split("=");
+            if(parts[0].equals("apptrackerUTPL")){
+                txtQr.setText("Compañía:"+parts[1]+"\n\nRuta: "+parts[2]+"\n\nNúmero de vehículo: "+parts[3]);
+            }
+        }else {
+            txtQr.setText("Por favor debe escanear un código QR para registrar los datos del vehículo");
+        }
+
+        //boton para escanear un codigo QR
         btnQR.setOnClickListener(new View.OnClickListener() {
-            MainActivity mainActivity;
             @Override
             public void onClick(View v) {
                 escanearQr();
+                //Navigation.findNavController(view).navigate(R.id.inicioMenu);
             }
 
         });
         return view;
     }
+    //configuracion del escaner QR
     public void escanearQr() {
         IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(CodigoQR.this);
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);

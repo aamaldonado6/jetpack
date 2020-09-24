@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
@@ -26,7 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import ec.edu.utpl.apptracker_f1.R;
+import ec.edu.utpl.apptracker_f1.manejadorBdd.GlobalClass;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +59,12 @@ public class Excesos extends Fragment {
     private OnFragmentInteractionListener mListener;
     View view;
     LinearLayout iContenedor;
-    DatabaseReference ref;
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    String datosBundle;
+    GlobalClass globalClass;
+    int hora,minuto,segundo,mSegundo,mes,dia,anio;
+    String horaAc="",fechaAc="";
+    ArrayList<String> nombreArrayList;
 
     public Excesos() {
         // Required empty public constructor
@@ -79,8 +92,7 @@ public class Excesos extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            datosBundle =getArguments().getString("idDisposi");
         }
     }
 
@@ -90,7 +102,8 @@ public class Excesos extends Fragment {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_excesos, container, false);
         iContenedor = view.findViewById(R.id.lcontenedor);
-        ref = FirebaseDatabase.getInstance().getReference();
+
+        nombreArrayList = new ArrayList<String>();
         listaExcesos();
         return view;
     }
@@ -103,86 +116,176 @@ public class Excesos extends Fragment {
     }
 
     public void listaExcesos() {
+        globalClass = ((GlobalClass) getActivity().getApplicationContext());
+        if(globalClass.getNombreTransporte() != null){
+            getDate();
+            //String myIMEI = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            //"bus/"+globalClass.getNombreTransporte()+"/autobus/"+globalClass.getNumVehiculo()+"/excesos/" +fechaAc+"/"+hora
+            ref.child("bus/"+globalClass.getNombreTransporte()+"/autobus/"+globalClass.getNumVehiculo()+"/excesos/" +fechaAc+"/"+hora).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                   int contador =0;
+                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                        try {
+                            String idR =snapshot.getKey();
 
-        //String myIMEI = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        ref.child("12982c91d931b50").child("excesoVelocidad").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int contador =0;
-                System.out.println("exxxxxxxxxxxxxxxxxxxxxxxxxxx");
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    try {
-                        Reporte rCoord = snapshot.getValue(Reporte.class);
-                        String rVel = rCoord.getVelocidad();
-                        int rEx = rCoord.getReportar();
-                        contador = contador+1;
-                        Switch switchb = new Switch(getContext());
-                        //Personalizando botones
-                        switchb.setText("Exceso de velocidad Nro: "+contador+"\n\nVelocidad: "+rVel+" Km/h");
-                        switchb.setTextColor(Color.rgb(255, 255, 255));
-                        switchb.setBackgroundColor(Color.rgb(64,89,120));
-                        if (rEx==1 ){
-                            switchb.setChecked(true);
+                            Reporte rCoord = snapshot.getValue(Reporte.class);
+
+                            double rVel = rCoord.getVelocidad();
+                            boolean rReport = rCoord.isReportar();
+
+                            if(rReport == false){
+
+                            nombreArrayList.add(contador, idR);
+
+                            Switch switchb = new Switch(getContext());
+
+
+
+                            //Personalizando botones
+                            switchb.setText("\nExceso de velocidad Nro: "+(contador+1)+"\nVelocidad: "+rVel+" Km/h\n");
+                            switchb.setTextColor(Color.rgb(255, 255, 255));
+                            switchb.setBackgroundColor(Color.rgb(64,89,120));
+                            switchb.setId(contador);
+
+                            switchb.setChecked(rReport);
+
+                            contador = contador+1;
+                            //Enviar un margin a los botones
+                            LinearLayout.LayoutParams parametros = new LinearLayout.LayoutParams(
+                                    /*width*/ ViewGroup.LayoutParams.MATCH_PARENT,
+                                    /*height*/ ViewGroup.LayoutParams.WRAP_CONTENT
+
+                            );
+                            parametros.setMargins(5, 15, 5, 5);
+                            //boton.setLayoutParams(parametros);
+                            switchb.setLayoutParams(parametros);
+                            switchb.setGravity(1);
+
+                            //implementar el evento
+                            switchb.setOnClickListener(misEventosButton);
+
+                            iContenedor.addView(switchb);}
+
+                        }catch(DatabaseException e){
+                            Log.e("error!!",""+dataSnapshot.getKey());
                         }
-
-                        //Enviar un margin a los botones
-                        LinearLayout.LayoutParams parametros = new LinearLayout.LayoutParams(
-                                /*width*/ ViewGroup.LayoutParams.MATCH_PARENT,
-                                /*height*/ ViewGroup.LayoutParams.WRAP_CONTENT
-
-                        );
-                        parametros.setMargins(5, 15, 5, 5);
-                        //boton.setLayoutParams(parametros);
-                        switchb.setLayoutParams(parametros);
-                        switchb.setGravity(1);
-                        //implementar el evento
-                        switchb.setOnClickListener(misEventosButton);
-
-                        iContenedor.addView(switchb);
-
-                    }catch(DatabaseException e){
-                        Log.e("error!!",""+dataSnapshot.getKey());
                     }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
 
-            }
-        });
+        }
+
+    }
+    private void getDate(){
+        Calendar calendario = new GregorianCalendar();
+        //parametros para la fecha
+        this.hora = calendario.get(Calendar.HOUR_OF_DAY);
+        this.minuto = calendario.get(Calendar.MINUTE);
+        this.segundo = calendario.get(Calendar.SECOND);
+        this.mSegundo = calendario.get(Calendar.MILLISECOND);
+        this.dia = calendario.get(Calendar.DAY_OF_MONTH);
+        this.mes = calendario.get(Calendar.MONTH);
+        this.mes = mes+1;
+        this.anio = calendario.get(Calendar.YEAR);
+        this.horaAc=hora+":"+minuto+":"+segundo;
+        this.fechaAc=dia+"-"+mes+"-"+anio;
     }
     private View.OnClickListener misEventosButton = new View.OnClickListener() {
         public void onClick(View v) {
+            globalClass = ((GlobalClass) getActivity().getApplicationContext());
             //aca castemos la variable v (View) para que este se convierta en un boton
             Button objBoton = (Button) v;
-            if (objBoton.isEnabled()){
-
+            //System.out.println(nombreArrayList.get(objBoton.getId()));
                 Toast.makeText(getContext(),
                         "Se reportó el exceso de velocidad Nro "+objBoton.getText(),Toast.LENGTH_SHORT).show();
 
+            Map<String,Object> datos = new HashMap<>();
+            datos.put("reportar",true);
+            try {
+                ref.child("bus/"+globalClass.getNombreTransporte()+"/autobus/"+globalClass.getNumVehiculo()+"/excesos/" +fechaAc+"/"+hora+"/"+nombreArrayList.get(objBoton.getId())).updateChildren(datos);
+            }catch (Exception e){
+                System.out.println("erre");
             }
+
         }
     };
 
 
     public static class Reporte {
-        private int reportar;
-        private String velocidad;
+        private double latitud;
+        private double longitud;
+        private double velocidad;
+        private String fecha;
+        private String hora;
+        private String idusuario;
+        private boolean reportar;
+
         public Reporte() {
             // ...
         }
 
-        public String getVelocidad() {
-            return velocidad;
-        }
-
-        public int getReportar() {
+        public boolean isReportar() {
             return reportar;
         }
 
+        public void setReportar(boolean reportar) {
+            this.reportar = reportar;
+        }
 
+        public double getLatitud() {
+            return latitud;
+        }
+
+        public void setLatitud(double latitud) {
+            this.latitud = latitud;
+        }
+
+        public double getLongitud() {
+            return longitud;
+        }
+
+        public void setLongitud(double longitud) {
+            this.longitud = longitud;
+        }
+
+        public double getVelocidad() {
+            return velocidad;
+        }
+
+        public void setVelocidad(double velocidad) {
+            this.velocidad = velocidad;
+        }
+
+        public String getFecha() {
+            return fecha;
+        }
+
+        public void setFecha(String fecha) {
+            this.fecha = fecha;
+        }
+
+        public String getHora() {
+            return hora;
+        }
+
+        public void setHora(String hora) {
+            this.hora = hora;
+        }
+
+        public String getIdusuario() {
+            return idusuario;
+        }
+
+        public void setIdusuario(String idusuario) {
+            this.idusuario = idusuario;
+        }
     }
 
 

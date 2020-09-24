@@ -3,6 +3,7 @@ package ec.edu.utpl.apptracker_f1.manejadorUbicacion;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,24 +26,32 @@ public class GpsUbicacion implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        //parametros para la fecha
+        Toast.makeText(null,"Esta app necesita todos los permisos solicitados para poder funcionar (Localizacion, Cámara)",Toast.LENGTH_SHORT).show();
+
+        //obtener la fecha
         getDate();
+        //codigo guardar en la respectiva raiz de la base de datos
+        String codigoBdd=null;
         //obtener la velocidad en km/h ,altitud y longitud
         double speed=((location.getSpeed()*3600)/1000);
         double sp = speed;
         double la = location.getLatitude();
         double lo = location.getLongitude();
         mainActivity.txtVelocidad.setText(String.format("%.2f",sp));
-        /*
-        if (speed < 6.5){
+        System.out.println(la);
+        System.out.println(speed);
+        /*if (speed < 6.5){
+            codigoBdd="DatosGPS";
             mainActivity.txtVelocidad.setText("0.00");
-            manejadorBdd.guardarDatos(String.format("%.4f",sp),la,lo,horaAc,fechaAc);
+            manejadorBdd.guardarDatos(String.format("%.4f",sp),la,lo,horaAc,fechaAc,codigoBdd);
         }else {
+            codigoBdd="excesoVelocidad";
             mainActivity.txtVelocidad.setText(String.format("%.2f",sp));
             if (speed >= 100){
-                manejadorBdd.guardarDatosExceso(String.format("%.4f",sp),la,lo,horaAc,fechaAc);}}*/
+                manejadorBdd.guardarDatos(String.format("%.4f",sp),la,lo,horaAc,fechaAc,codigoBdd);}}*/
     }
     private void getDate(){
+        //parametros para la fecha
         hora = calendario.get(Calendar.HOUR_OF_DAY);
         minuto = calendario.get(Calendar.MINUTE);
         segundo = calendario.get(Calendar.SECOND);

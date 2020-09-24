@@ -11,12 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import androidx.navigation.Navigation;
 import ec.edu.utpl.apptracker_f1.MainActivity;
 import ec.edu.utpl.apptracker_f1.R;
+import ec.edu.utpl.apptracker_f1.manejadorBdd.GlobalClass;
+import ec.edu.utpl.apptracker_f1.manejadorBdd.ManejadorBdd;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,10 +45,13 @@ public class ReportarCond extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    public RadioButton radio11,radio12,radio13,radio14;
+    public CheckBox radio11,radio12,radio13,radio14,radio15;
     public Button button;
     public EditText textView;
     View view;
+
+    ManejadorBdd mBdd;
+    GlobalClass globalClass;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -72,6 +88,7 @@ public class ReportarCond extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -84,6 +101,7 @@ public class ReportarCond extends Fragment {
         radio12 =view.findViewById(R.id.radio2);
         radio13 =view.findViewById(R.id.radio3);
         radio14 =view.findViewById(R.id.radio4);
+        radio15 =view.findViewById(R.id.radio5);
         textView =view.findViewById(R.id.txt_tv);
         button=view.findViewById(R.id.btn_rep);
         button.setOnClickListener(new View.OnClickListener() {
@@ -96,14 +114,25 @@ public class ReportarCond extends Fragment {
         return view;
     }
 
+
     public void guardarD(){
-        String coment = String.valueOf(textView.getText());
-        String r1 = String.valueOf(radio11.isChecked());
-        String r2 = String.valueOf(radio12.isChecked());
-        String r3 = String.valueOf(radio13.isChecked());
-        String r4 = String.valueOf(radio14.isChecked());
+        globalClass = ((GlobalClass) getActivity().getApplicationContext());
+        String coment ="";
+        if(textView.getText() != null){
+           coment = String.valueOf(textView.getText());
+        }
+
+        boolean r1 = radio11.isChecked();
+        boolean r2 = radio12.isChecked();
+        boolean r3 = radio13.isChecked();
+        boolean r4 = radio14.isChecked();
+        boolean r5 = radio15.isChecked();
         Toast.makeText(getActivity().getApplicationContext(),"REPORTE GUARDADO", Toast.LENGTH_SHORT).show();
-        getFragmentManager().popBackStack();
+
+
+        mBdd.getInstance().guardarReporte(r1,r2,r3,r4,r5,coment,globalClass);
+
+        Navigation.findNavController(view).navigate(R.id.inicioMenu);
 
 
     }
