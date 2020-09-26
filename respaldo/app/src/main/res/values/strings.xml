@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">AppTracker_f1</string>
+    <string name="title_activity_maps01">Map</string>
+    <string name="txt_tu_velocidad">Tu Velocidad:</string>
+    <string name="vacio">.....</string>
+    <string name="txt_kmh">KM/H</string>
+    <string name="txt_rep_conductor">Reportar Conductor</string>
+    <string name="txt_mapa">Mapa</string>
+    <string name="txt_qr">Código QR</string>
+    <string name="txt_excesos">Excesos de velocidad</string>
+    <string name="txt_panico">Alerta</string>
+    <string name="log_login">logo de inicio de la app</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="txt_info">Información de la APP</string>
+
+</resources>

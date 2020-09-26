@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".menuFragment.CodigoQR"
+    android:id="@+id/codQR"
+    android:background="@drawable/fondogota"
+    android:name="com.journeyapps.barcodescanner.CaptureActivity"
+    android:screenOrientation="fullSensor"
+    tools:replace="screenOrientation"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="100dp"
+            android:text="Datos del Servicio de Transporte"
+            android:textColor="#DD000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="100dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/qr" />
+        <LinearLayout
+            android:id="@+id/linlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_comentario"
+            android:orientation="vertical"
+            android:layout_marginTop="120dp">
+
+
+            <TextView
+                android:id="@+id/txt_qr"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginBottom="30dp"
+                android:background="@color/caja_texto_qr"
+                android:fontFamily="sans-serif"
+                android:textAlignment="center"
+                android:paddingLeft="15dp"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/linlay"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_bg"
+            android:backgroundTint="@color/cardview_dark_background"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="70dp"
+            android:textStyle="bold"
+            android:paddingRight="70dp"
+            android:text="Escanear QR"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+
+
+            />
+    </RelativeLayout>
+
+
+</FrameLayout>

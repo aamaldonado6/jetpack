@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorStickyBG">#00897B</color>
+    <color name="colorSticky">#074d71</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#000000</color>
+    <color name="gradStart">#19AA8B</color>
+    <color name="gradStop">#23A7D8</color>
+    <color name="alertaCard">#3CFF0E0E</color>
+    <color name="letra_menu">#C9000000</color>
+    <color name="caja_texto">#FFECFCFC</color>
+    <color name="caja_texto_qr">#2504D3D3</color>
+    <color name="backGroundCard">#303030</color>
+</resources>

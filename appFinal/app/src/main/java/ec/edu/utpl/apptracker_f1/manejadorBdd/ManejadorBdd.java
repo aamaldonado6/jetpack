@@ -36,8 +36,8 @@ public class ManejadorBdd {
     }
     CountDownTimer countDownTimer;
     CountDownTimer countDownTimerMov;
-    CountDownTimer countDownTimerMovExceso;
     CountDownTimer countDownTimerMovNormal;
+    CountDownTimer countDownTimerMovExceso;
 
 
     public void setMainActivity(MainActivity mainActivity){
@@ -80,14 +80,14 @@ public class ManejadorBdd {
         getDate();
         DecimalFormat formato1 = new DecimalFormat("#.##");
         String velocidad = formato1.format(gClass.getVelocidad());
-        final double numberVeloc = gClass.getVelocidad();
+        double numberVeloc = gClass.getVelocidad();
         //codigo para saber que usuario esta ocupando la app
         String codUs = MainActivity.bundle.getString("codUsuario","nonUs");
 
         //crear valores para guardar en la bdd
         //obtener el id del usuario
-        final String idUs = MainActivity.bundle.getString("idUsuario",null);
-        final Map<String,Object> datos = new HashMap<>();
+        String idUs = MainActivity.bundle.getString("idUsuario",null);
+        Map<String,Object> datos = new HashMap<>();
         datos.put("latitud",gClass.getLatitud());
         datos.put("longitud",gClass.getLongitud());
         datos.put("idusuario",idUs);
@@ -95,8 +95,8 @@ public class ManejadorBdd {
         datos.put("hora",horaAc);
         datos.put("fecha",fechaAc);
 
-        final String nombreTrans =gClass.getNombreTransporte();
-        final String numVehiculo =gClass.getNumVehiculo();
+        String nombreTrans =gClass.getNombreTransporte();
+        String numVehiculo =gClass.getNumVehiculo();
         String tipodeUsuario=gClass.getTipoUs();
         String ruta =gClass.getRuta();
 
@@ -104,81 +104,82 @@ public class ManejadorBdd {
         if(tipodeUsuario != null){
             tipUs=tipodeUsuario;
         }
-        //////////
-
-        if(numberVeloc<5){
-            //if(20<5){
+        // if(numberVeloc<5){
+        if(20<5){
             //envia la velocidad a la pantalla del usuario
             mainActivity.txtVelocidad.setText("....");
         }else{
+
             mainActivity.txtVelocidad.setText(velocidad);
-            //countDown
-
             if( numberVeloc < 90 ){
-                //count down
-                if(countDownTimerMovNormal == null){
-                    Toast.makeText(null,"Entro a normal",Toast.LENGTH_SHORT).show();
-                    final String finalTipUs = tipUs;
-                    countDownTimerMovNormal= new CountDownTimer(10000, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            //Log.e("seconds remaining: " ,""+horaAc);
-                        }
-
-                        public void onFinish() {
-                            if(finalTipUs.equals("chofer") ){
-
-                                mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/datos_gps_actual").setValue(datos);
-                                mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/datos_gps_bus/"+fechaAc+ "/" + hora).push().setValue(datos);
-                            }else{
-                                if(finalTipUs.equals("pasajero")){
-                                    mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/pasajero/"+fechaAc+ "/" + hora+"/"+idUs).push().setValue(datos);
-                                }else {
-                                    mDatabase.child("nonus/usuario/"+fechaAc+"/"+hora+"/"+idUs).setValue(datos);
-                                }
-                            }
-
-
-                            countDownTimerMovNormal=null;
-                        }
-                    }.start();
+                if(tipUs.equals("chofer") || tipUs.equals("pasajero")){
+                    contadorVelocidadNormal(nombreTrans,numVehiculo,datos,idUs,tipUs);
+                }else {
+                    mDatabase.child("nonus/usuario/"+fechaAc+"/"+hora+"/"+idUs).setValue(datos);
                 }
 
             }else{
-                if(countDownTimerMovExceso == null){
-                    Toast.makeText(null,"Entro a exceso",Toast.LENGTH_SHORT).show();
-                    final String finalTipUs = tipUs;
-                    final String finalTipUs1 = tipUs;
-                    countDownTimerMovExceso= new CountDownTimer(10000, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            //Log.e("seconds remaining: " ,""+horaAc);
-                        }
-
-                        public void onFinish() {
-                            if (numberVeloc >= 90){
-                                if(finalTipUs1.equals("chofer")){
-                                    datos.put("reportar",false);
-                                    countDownTimer(idUs,datos,nombreTrans,numVehiculo);
-
-                                }else{
-                                    if(finalTipUs1.equals("pasajero")){
-                                        //mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/"+idUs+"/" +fechaAc+ "/" + hora).setValue(datos);
-                                    }else {
-                                        // mDatabase.child("nonus/"+fechaAc+"/"+hora+"/"+idUs).push().setValue(datos);
-                                    }
-                                }
-                            }
-                            countDownTimerMovExceso=null;
-                        }
-                    }.start();
+                if (numberVeloc >= 90){
+                    if(tipUs.equals("chofer")){
+                        contadorExcesoVelocidad(nombreTrans,numVehiculo,datos,idUs,tipUs);
+                    }else if(!tipUs.equals("pasajero")){
+                        mDatabase.child("nonus/usuario/"+fechaAc+"/"+hora+"/"+idUs).setValue(datos);
+                    }
                 }
-
             }
         }
+
     }
 
+    public void contadorVelocidadNormal(final String nombreTrans, final String numVehiculo, final Map<String, Object> datos, final String idUs, final String tipUs){
+        if(tipUs.equals("chofer")){
+            //guarda la posicion actual del transporte en un solo campo
+            mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/datos_gps_actual").setValue(datos);
+        }
+        //guarda la posicion actual del transporte en muchos campos cada 10 segundos
+        if(countDownTimerMovNormal == null){
+            //establecer el limite de tiempo
+            countDownTimerMovNormal= new CountDownTimer(10000, 1000) {
+                //interacciones en cada intervalo
+                public void onTick(long millisUntilFinished) {
+                    //Log.e("seconds remaining: " ,""+horaAc);
+                }
+                //finalizacion del contador
+                public void onFinish() {
+                    //hacer la escritura si el usuario es el chofer o el pasajero
+                    if(tipUs.equals("chofer")){
+                        mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/datos_gps_bus/"+fechaAc+ "/" + hora).push().setValue(datos);
+                    }else if(tipUs.equals("pasajero")){
+                        mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/pasajero/"+fechaAc+ "/" + hora+"/"+idUs).push().setValue(datos);
+                    }
+                    //volver nula la variable para que otra vez pueda entrar al ciclo
+                    countDownTimerMovNormal=null;
+                }
+            }.start();
+        }
 
+
+    }
+    public void contadorExcesoVelocidad(final String nombreTrans, final String numVehiculo, final Map<String, Object> datos, final String idUs, final String tipUs){
+        //guarda la posicion actual del transporte en muchos campos cada 10 segundos
+        if(countDownTimerMovExceso == null){
+            //establecer el limite de tiempo
+            countDownTimerMovExceso= new CountDownTimer(6000, 1000) {
+                //interacciones en cada intervalo
+                public void onTick(long millisUntilFinished) {
+                    //Log.e("seconds remaining: " ,""+horaAc);
+                }
+                //finalizacion del contador
+                public void onFinish() {
+                    datos.put("contador",0);
+                    //hacer la escritura del exceso de velocidad
+                    mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/excesos/" +fechaAc+"/"+hora).push().setValue(datos);
+                    //volver nula la variable para que otra vez pueda entrar al ciclo
+                    countDownTimerMovExceso=null;
+                }
+            }.start();
+        }
+    }
 
     public void datosMovimiento(final GlobalClass gClass){
         String tipodeUsuario = gClass.getTipoUs();
@@ -243,23 +244,6 @@ public class ManejadorBdd {
         this.fechaAc=dia+"-"+mes+"-"+anio;
     }
 
-    private void countDownTimer(final String idUs, final Map<String, Object> datos, final String nombreTrans, final String numVehiculo){
-        if(countDownTimer == null){
-            countDownTimer= new CountDownTimer(15000, 1000) {
-
-                public void onTick(long millisUntilFinished) {
-                    // Log.e("seconds remaining: " ,""+millisUntilFinished / 1000);
-                }
-
-                public void onFinish() {
-                    mDatabase.child("bus/"+nombreTrans+"/autobus/"+numVehiculo+"/excesos/" +fechaAc+"/"+hora).push().setValue(datos);
-
-                    countDownTimer=null;
-                }
-            }.start();
-        }
-
-    }
 
 
 }
